@@ -3,6 +3,7 @@
 namespace Sales.Services
 {
     using Newtonsoft.Json;
+    using Plugin.Connectivity;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
@@ -11,6 +12,34 @@ namespace Sales.Services
 
     public class ApiService
     {
+        public object Languages { get; private set; }
+
+        public async Task<Response> CheckConnection()
+        {
+            if (!CrossConnectivity.Current.IsConnected)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = "Please turn on your internet settings.",
+                };
+            }
+
+            var isReachable = await CrossConnectivity.Current.IsRemoteReachable("google.com");
+            if (!isReachable)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = "No internet connection",
+                };
+            }
+
+            return new Response
+            {
+                IsSuccess = true,
+            };
+        }
         public async Task<Response> GetList<T>(string urlBase,string prefix,string controller)
         {
             try
@@ -25,7 +54,7 @@ namespace Sales.Services
                 {
                     return new Response
                     {
-                        IsSucces = false,
+                        IsSuccess = false,
                         Message = answer,
 
                     };
@@ -34,7 +63,7 @@ namespace Sales.Services
                 var list = JsonConvert.DeserializeObject<List<T>>(answer);
                 return new Response
                 {
-                    IsSucces = true,
+                    IsSuccess = true,
                     Result = list,
                 };
 
@@ -44,7 +73,7 @@ namespace Sales.Services
 
                 return new Response
                 {
-                    IsSucces = false,
+                    IsSuccess = false,
                     Message = ex.Message,
 
                 };
