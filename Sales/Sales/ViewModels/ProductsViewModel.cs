@@ -9,11 +9,16 @@
     using Sales.Common.Models;
     using Sales.Services;
     using Xamarin.Forms;
+    
+    using GalaSoft.MvvmLight.Command;
+    using System.Windows.Input;
 
     public class ProductsViewModel : BaseViewModel
     {
 
         private ApiService apiService;
+
+        private bool isRefreshing;
         private ObservableCollection<Product> products;
 
         public ObservableCollection<Product> Products
@@ -28,6 +33,17 @@
             }
         }
 
+        public bool IsRefreshing
+        {
+            get
+            {
+                return this.isRefreshing;
+            }
+            set
+            {
+                this.SetValue(ref this.isRefreshing, value);
+            }
+        }
         public ProductsViewModel()
         {
             this.apiService = new ApiService();
@@ -36,14 +52,24 @@
 
         private async void LoadProducts()
         {
+            this.IsRefreshing = true;
             var response = await this.apiService.GetList<Product>("https://salesapiservices.azurewebsites.net","/api","/Products");
             if (!response.IsSucces)
-            {
+                {
                 await Application.Current.MainPage.DisplayAlert("Error", response.Message, "Accept");
+                this.IsRefreshing = false;
             }
 
             var list = (List<Product>)response.Result;
             this.Products = new ObservableCollection<Product>(list);
+            this.IsRefreshing = false;
+        }
+
+        public ICommand RefreshCommand {
+            get
+            {
+                return new RelayCommand(LoadProducts);
+            }
         }
     }
 }
