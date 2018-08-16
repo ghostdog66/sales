@@ -31,7 +31,7 @@ namespace Sales.Services
                     };
                 }
 
-                var list = JsonConvert.DeserializeObject<T>(answer);
+                var list = JsonConvert.DeserializeObject<List<T>>(answer);
                 return new Response
                 {
                     IsSucces = true,
