@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Sales.Views.ProductsPage"
+             xmlns:i18n="clr-namespace:Sales.Helpers"
              BindingContext="{Binding Main,Source={StaticResource Locator}}"
-             Title="Products">
+             Title=" {i18n:Translate Products} ">
     <ContentPage.Content>
         <StackLayout
             Padding="5"
@@ -39,7 +40,7 @@
                                 <Label
                                     Grid.Column="1"
                                     HorizontalOptions="End"
-                                    Text="{Binding Price,StringFormat='{0:C2}'}"
+                                    Text="{Binding Price,StringFormat='[0:C2]'}"
                                     
                                        >
                                     

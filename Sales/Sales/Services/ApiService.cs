@@ -4,6 +4,7 @@ namespace Sales.Services
 {
     using Newtonsoft.Json;
     using Plugin.Connectivity;
+    using Sales.Helpers;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
@@ -12,7 +13,7 @@ namespace Sales.Services
 
     public class ApiService
     {
-        public object Languages { get; private set; }
+       
 
         public async Task<Response> CheckConnection()
         {
@@ -21,7 +22,7 @@ namespace Sales.Services
                 return new Response
                 {
                     IsSuccess = false,
-                    Message = "Please turn on your internet settings.",
+                    Message = Languages.TurnOnInternet,
                 };
             }
 
@@ -31,7 +32,7 @@ namespace Sales.Services
                 return new Response
                 {
                     IsSuccess = false,
-                    Message = "No internet connection",
+                    Message = Languages.NoInternet,
                 };
             }
 
